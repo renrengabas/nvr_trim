@@ -1,6 +1,6 @@
 /var/log/trimvideotree {
     missingok
-    rotate 4
-    size 500k
+    daily
+    rotate 7
     compress
 }

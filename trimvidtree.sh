@@ -14,7 +14,7 @@
 # CONFIG
 NVR_BASEDIR="/home/rainier/airvision-nvr/events"
 NVR_MAXDAYRECORD="10"
-NVR_ZERODAY="100"
+NVR_ZERODAY="30"
 NVR_CAMERAS="1 2"
 LOG_FILE="/var/log/trimvideotree"
 
@@ -46,7 +46,7 @@ do
     # Look for the targets and delete the contents
     for CAMERA in $NVR_CAMERAS
     do
-        rm -rf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY
+        rm -rvf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY >> $LOG_FILE
         find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
     done
 done
