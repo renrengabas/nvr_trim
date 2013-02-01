@@ -13,30 +13,40 @@
 
 # CONFIG
 NVR_BASEDIR="/home/rainier/airvision-nvr/events"
-NVR_MAXDAYRECORD="2"
-NVR_CAMERAS="1 2 3"
+NVR_MAXDAYRECORD="10"
+NVR_ZERODAY="100"
+NVR_CAMERAS="1 2"
+LOG_FILE="/var/log/trimvideotree"
 
 
 # IMPLEMENTATION
+if [ ! -f $LOG_FILE ]
+    then
+        echo "No log file available: $LOG_FILE"
+        exit 0
+fi
 
 # Check that the base directory has been set properly
 if [ ! -d $NVR_BASEDIR ]
     then
-        echo "NVR_BASEDIR does not exist!"
+        echo "`date`: NVR_BASEDIR does not exist!"
         exit 0
 fi
 
-# Record the target year, month and day
-TARGET_YEAR=`date -d "now -$NVR_MAXDAYRECORD days" +%y`
-TARGET_MONTH=`date -d "now -$NVR_MAXDAYRECORD days" +%m`
-TARGET_DAY=`date -d "now -$NVR_MAXDAYRECORD days" +%d`
-
-# Look for the targets and delete the contents
-for CAMERA in $NVR_CAMERAS
+# From "zero day" up to day-NVR_MAXDAYRECORD
+for (( DAY=NVR_ZERODAY; DAY>NVR_MAXDAYRECORD ; DAY-- ))
 do
-    rm -rf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY
-    find $NVR_BASEDIR/$CAMERA -type d -empty -exec rmdir {} \;
-    find $NVR_BASEDIR/$CAMERA -type d -empty -exec rmdir {} \;
+    # Record the target year, month and day
+    TARGET_YEAR=`date -d "now -$DAY days" +%y`
+    TARGET_MONTH=`date -d "now -$DAY days" +%m`
+    TARGET_DAY=`date -d "now -$DAY days" +%d`
+
+    echo "`date`: Deleting records for $TARGET_YEAR-$TARGET_MONTH-$TARGET_DAY" >> $LOG_FILE
+
+    # Look for the targets and delete the contents
+    for CAMERA in $NVR_CAMERAS
+    do
+        rm -rf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY
+        find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
+    done
 done
-
-
