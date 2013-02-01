@@ -1,0 +1,7 @@
+#m      - minute
+#hr     - hour
+#d      - day of month
+#dow    - day of week
+#cmd    - command
+#m  hr  d   mon dow cmd
+0   0   *   *   *   /root/trimvidtree.sh
