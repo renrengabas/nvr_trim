@@ -41,12 +41,16 @@ do
     TARGET_MONTH=`date -d "now -$DAY days" +%m`
     TARGET_DAY=`date -d "now -$DAY days" +%d`
 
-    echo "`date`: Deleting records for $TARGET_YEAR-$TARGET_MONTH-$TARGET_DAY" >> $LOG_FILE
+    echo "`date`: Looking for recordings on $TARGET_YEAR-$TARGET_MONTH-$TARGET_DAY..." >> $LOG_FILE
 
     # Look for the targets and delete the contents
     for CAMERA in $NVR_CAMERAS
     do
-        rm -rvf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY >> $LOG_FILE
-        find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
+        if [ -d $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY ]
+            then
+                echo "...found!"
+                rm -rvf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY >> $LOG_FILE
+                find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
+        fi
     done
 done
