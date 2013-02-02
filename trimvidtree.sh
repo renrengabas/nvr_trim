@@ -13,7 +13,7 @@
 
 # CONFIG
 NVR_BASEDIR="/home/rainier/airvision-nvr/events"
-NVR_MAXDAYRECORD="10"
+NVR_RETENTIONDAYS="10"
 NVR_ZERODAY="30"
 NVR_CAMERAS="1 2"
 LOG_FILE="/var/log/trimvideotree"
@@ -33,8 +33,8 @@ if [ ! -d $NVR_BASEDIR ]
         exit 0
 fi
 
-# From "zero day" up to day-NVR_MAXDAYRECORD
-for (( DAY=NVR_ZERODAY; DAY>NVR_MAXDAYRECORD ; DAY-- ))
+# From "zero day" up to day-NVR_RETENTIONDAYS
+for (( DAY=NVR_ZERODAY; DAY>NVR_RETENTIONDAYS ; DAY-- ))
 do
     # Record the target year, month and day
     TARGET_YEAR=`date -d "now -$DAY days" +%y`
@@ -48,7 +48,7 @@ do
     do
         if [ -d $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY ]
             then
-                echo "...found!" >> $LOG_FILE
+                echo "...Found data for camera $CAMERA." >> $LOG_FILE
                 rm -rvf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY >> $LOG_FILE
                 find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
         fi
