@@ -48,7 +48,7 @@ do
     do
         if [ -d $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY ]
             then
-                echo "...found!"
+                echo "...found!" >> $LOG_FILE
                 rm -rvf $NVR_BASEDIR/$CAMERA/$TARGET_YEAR/$TARGET_MONTH/$TARGET_DAY >> $LOG_FILE
                 find $NVR_BASEDIR/$CAMERA/. -type d -empty -exec rmdir {} \;
         fi
